@@ -2,6 +2,7 @@ package com.samar.hitmovies.data.remote.dto
 
 
 import com.google.gson.annotations.SerializedName
+import com.samar.hitmovies.domain.model.Genre
 
 data class GenreDto(
     @SerializedName("name")
@@ -9,3 +10,10 @@ data class GenreDto(
     @SerializedName("uuid")
     val uuid: String
 )
+
+fun GenreDto.toGenre(): Genre{
+    return Genre(
+        name = name,
+        uuid = uuid
+    )
+}

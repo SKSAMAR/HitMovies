@@ -1,5 +1,7 @@
 package com.samar.hitmovies.presentation.genres
 
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -8,19 +10,25 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.samar.hitmovies.common.BaseScaffold
+import com.samar.hitmovies.data.remote.dto.toGenre
+import com.samar.hitmovies.presentation.genres.component.GenreDesign
 
 @Composable
 fun GenreScreen(viewModel: GenreViewModel = hiltViewModel()){
     val state = viewModel.state.value
     BaseScaffold {
         if(state.isLoading) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
         if(state.error.isNotEmpty()){
-            Text(text = state.error, modifier = Modifier.align(Alignment.Center), style = MaterialTheme.typography.h4)
+            Text(text = state.error, modifier = Modifier.align(Alignment.Center), style = MaterialTheme.typography.subtitle1)
         }
         state.receivedResponse?.let {
-            Text(text = "Response: "+state.receivedResponse.toString(), modifier = Modifier.align(Alignment.Center), style = MaterialTheme.typography.h4)
+            LazyColumn {
+                items(state.receivedResponse) {
+                    GenreDesign(genre = it.toGenre(), clickable = {})
+                }
+            }
         }
     }
 }
