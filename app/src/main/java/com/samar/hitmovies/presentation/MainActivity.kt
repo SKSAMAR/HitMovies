@@ -1,4 +1,4 @@
-package com.samar.hitmovies
+package com.samar.hitmovies.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -6,10 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.samar.hitmovies.presentation.common.MainScreen
 import com.samar.hitmovies.ui.theme.HitMoviesTheme
 
 class MainActivity : ComponentActivity() {
@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-
+                    MainScreen()
                 }
             }
         }
@@ -29,10 +29,11 @@ class MainActivity : ComponentActivity() {
 }
 
 
+
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     HitMoviesTheme {
-
+        MainScreen()
     }
 }

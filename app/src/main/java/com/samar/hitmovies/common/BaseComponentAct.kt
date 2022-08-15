@@ -16,26 +16,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.samar.hitmovies.ui.theme.IconColor
 import com.samar.hitmovies.util.ConnectionLiveData
 import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
-open class BaseComponentAct : ComponentActivity() {
-
-    lateinit var connectionLiveData: ConnectionLiveData
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        connectionLiveData = ConnectionLiveData(this@BaseComponentAct)
-    }
-
 
     @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     @Composable
-    open fun BaseScaffold(
+    fun BaseScaffold(
         title: String = "",
         navigationIcon: Boolean = false,
         color: Color = IconColor,
@@ -43,11 +34,12 @@ open class BaseComponentAct : ComponentActivity() {
         floatingActionButtonPosition: FabPosition = FabPosition.End,
         isFloatingActionButtonDocked: Boolean = false,
         action: () -> Unit = {},
+        connectionLiveData: ConnectionLiveData = ConnectionLiveData(LocalContext.current),
         content: @Composable BoxScope.() -> Unit
     ) {
+
         val isNetworkAvailable = connectionLiveData.observeAsState(true)
         val scaffoldState = rememberScaffoldState()
-        val coroutineScope = rememberCoroutineScope()
         Scaffold(
             topBar = {
                 TopAppBar(
@@ -107,8 +99,4 @@ open class BaseComponentAct : ComponentActivity() {
                 )
             }
         }
-
-
     }
-
-}
