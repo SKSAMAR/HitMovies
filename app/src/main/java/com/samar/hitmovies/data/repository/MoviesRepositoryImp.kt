@@ -1,5 +1,8 @@
 package com.samar.hitmovies.data.repository
 
-class MoviesRepositoryImp {
+import com.samar.hitmovies.data.remote.MovieApi
+import com.samar.hitmovies.domain.repository.MovieRepository
+
+class MoviesRepositoryImp(val movieApi: MovieApi): MovieRepository {
 
 }

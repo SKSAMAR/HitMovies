@@ -2,7 +2,6 @@ package com.samar.hitmovies.common
 
 object Constants {
 
-    const val BASE_URL = "https://api.coinpaprika.com/"
-    const val PARAM_COIN_ID = "coinId"
+    const val BASE_URL = "https://movies-app1.p.rapidapi.com/"
 
 }
