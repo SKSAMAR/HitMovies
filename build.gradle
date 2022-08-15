@@ -1,6 +1,7 @@
 buildscript {
     ext {
         compose_version = '1.2.0-rc01'
+        lottieVersion = '5.2.0'
     }
 
     dependencies {

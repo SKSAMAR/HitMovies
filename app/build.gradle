@@ -96,4 +96,14 @@ dependencies {
 
     implementation  'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03'
 
+
+    //Lotte Animation
+    implementation "com.airbnb.android:lottie-compose:$lottieVersion"
+
+    //Glider for compose
+    implementation "com.github.skydoves:landscapist-glide:1.5.2"
+
+    //LiveData as state
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+
 }
