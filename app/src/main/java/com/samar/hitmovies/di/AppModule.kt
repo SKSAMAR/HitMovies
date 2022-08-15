@@ -1,7 +1,9 @@
 package com.samar.hitmovies.di
 
+import android.content.Context
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
+import com.samar.hitmovies.R
 import com.samar.hitmovies.common.Constants.BASE_URL
 import com.samar.hitmovies.data.remote.MovieApi
 import com.samar.hitmovies.data.repository.MoviesRepositoryImp
@@ -9,6 +11,7 @@ import com.samar.hitmovies.domain.repository.MovieRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -38,7 +41,9 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun getOkHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor
+    fun getOkHttpClient(
+        httpLoggingInterceptor: HttpLoggingInterceptor,
+        @ApplicationContext context: Context
     ): OkHttpClient {
         val httpClient = OkHttpClient.Builder()
             .callTimeout(5, TimeUnit.MINUTES)
@@ -49,8 +54,8 @@ object AppModule {
             .addInterceptor(httpLoggingInterceptor)
             httpClient.addInterceptor(Interceptor { chain: Interceptor.Chain ->
             val request: Request = chain.request().newBuilder()
-                .addHeader("X-RapidAPI-Host: ", "movies-app1.p.rapidapi.com")
-                .addHeader("X-RapidAPI-Key: ","d8e73ae76emsh2f94997e0f4e679p1e51b9jsn070c65d089da")
+                .addHeader("X-RapidAPI-Host", context.resources.getString(R.string.Host))
+                .addHeader("X-RapidAPI-Key",context.resources.getString(R.string.Key))
                 .build()
             val response: Response = chain.proceed(request)
             response

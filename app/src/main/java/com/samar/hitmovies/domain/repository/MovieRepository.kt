@@ -1,7 +1,7 @@
 package com.samar.hitmovies.domain.repository
 
-import java.util.*
+import com.samar.hitmovies.data.remote.dto.GenreResponse
 
 interface MovieRepository {
-    suspend fun getGenres(): Objects
+    suspend fun getGenres(): GenreResponse
 }
