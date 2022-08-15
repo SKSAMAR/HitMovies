@@ -10,7 +10,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -44,6 +47,15 @@ object AppModule {
             .readTimeout(5, TimeUnit.MINUTES)
             .writeTimeout(5, TimeUnit.MINUTES)
             .addInterceptor(httpLoggingInterceptor)
+            httpClient.addInterceptor(Interceptor { chain: Interceptor.Chain ->
+            val request: Request = chain.request().newBuilder()
+                .addHeader("X-RapidAPI-Host: ", "movies-app1.p.rapidapi.com")
+                .addHeader("X-RapidAPI-Key: ","d8e73ae76emsh2f94997e0f4e679p1e51b9jsn070c65d089da")
+                .build()
+            val response: Response = chain.proceed(request)
+            response
+        })
+
         return httpClient.build()
     }
 
