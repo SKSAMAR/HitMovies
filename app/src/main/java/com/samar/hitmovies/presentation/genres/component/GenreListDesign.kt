@@ -30,7 +30,7 @@ fun GenreDesign(genre: Genre, clickable:(Genre)->Unit) {
         ) {
             Text(
                 text = genre.name,
-                style = MaterialTheme.typography.h6,
+                style = MaterialTheme.typography.body2,
             )
         }
         Divider()

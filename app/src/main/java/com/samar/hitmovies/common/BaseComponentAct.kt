@@ -30,9 +30,6 @@ import dagger.hilt.android.AndroidEntryPoint
         title: String = "",
         navigationIcon: Boolean = false,
         color: Color = IconColor,
-        floatingActionButton: @Composable () -> Unit = {},
-        floatingActionButtonPosition: FabPosition = FabPosition.End,
-        isFloatingActionButtonDocked: Boolean = false,
         action: () -> Unit = {},
         connectionLiveData: ConnectionLiveData = ConnectionLiveData(LocalContext.current),
         content: @Composable BoxScope.() -> Unit
@@ -40,6 +37,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
         val isNetworkAvailable = connectionLiveData.observeAsState(true)
         val scaffoldState = rememberScaffoldState()
+        val coroutineScope = rememberCoroutineScope()
         Scaffold(
             topBar = {
                 TopAppBar(
