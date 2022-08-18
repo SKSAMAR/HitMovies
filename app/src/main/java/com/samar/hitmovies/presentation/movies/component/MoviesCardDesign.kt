@@ -1,5 +1,6 @@
 package com.samar.hitmovies.presentation.movies.component
 
+import android.content.res.Configuration
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -44,6 +46,7 @@ import javax.annotation.Untainted
 fun MoviesCardDesign(
     movie: MovieDetailDto,
 ) {
+    val configuration = LocalConfiguration.current
     var expandableState by remember { mutableStateOf(false) }
     val colorGray = Color.Gray
     val colorWhite = Color.White
@@ -57,7 +60,16 @@ fun MoviesCardDesign(
             end.linkTo(parent.end)
             width = Dimension.fillToConstraints
             height = if (expandableState){
-                Dimension.ratio("1:2")
+                var ratio = "1.4:1"
+                when(configuration.orientation){
+                    Configuration.ORIENTATION_PORTRAIT -> {
+                        ratio = "1:2"
+                    }
+                    else->{
+                        ratio = "1.4:1"
+                    }
+                }
+                Dimension.ratio(ratio)
             }else{
                 Dimension.ratio("1:1.4")
             }
@@ -67,7 +79,7 @@ fun MoviesCardDesign(
     ConstraintLayout(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 10.dp, horizontal = 5.dp),
+            .padding(10.dp),
         constraintSet = constraintSet
     ) {
         Card(
@@ -140,7 +152,7 @@ fun MoviesCardDesign(
                             text = capation,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 5.dp, horizontal = 5.dp),
+                                .padding(5.dp),
                             style = MaterialTheme.typography.overline,
                             color = MaterialTheme.colors.primary,
                             textAlign = TextAlign.Center

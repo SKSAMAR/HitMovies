@@ -49,7 +49,7 @@ class MoviesViewModel
         if(genre.value.lowercase()!="all"){
             baseConnUrl+="&genre="+genre.value
         }
-        baseConnUrl+="&page=$page&limit=10"
+        baseConnUrl+="&page=$page&limit=20"
         getMoviesUseCase.invoke(baseConnUrl).onEach {
             when(it){
                 is Resource.Success->{
@@ -103,7 +103,7 @@ class MoviesViewModel
             return
         }
 
-        var baseConnUrl = "/titles/search/title/${movieTitle.value}?page=$page&info=mini_info&limit=10"
+        var baseConnUrl = "/titles/search/title/${movieTitle.value}?page=$page&info=mini_info&limit=20"
 
         if(type.value.typeCode.lowercase()!="all"){
             baseConnUrl+="&titleType="+type.value.typeCode

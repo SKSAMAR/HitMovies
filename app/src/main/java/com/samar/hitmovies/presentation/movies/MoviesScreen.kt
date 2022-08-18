@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -25,6 +26,7 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
 fun MoviesScreen(viewModel: MoviesViewModel) {
+    val configuration = LocalConfiguration.current
     val isYearExpanded = remember { mutableStateOf(false) }
     val isGenreExpanded = remember { mutableStateOf(false) }
     val isTypeExpanded = remember { mutableStateOf(false) }
@@ -40,35 +42,50 @@ fun MoviesScreen(viewModel: MoviesViewModel) {
                     .padding(start = 18.dp, end = 18.dp, top = 9.dp, bottom = 4.dp)
             ) {
 
-                FlowRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 2.dp),
-                    mainAxisSpacing = 10.dp,
-                    crossAxisSpacing = 10.dp,
-                ) {
-                    OptionTag(hint = "Year", tag = viewModel.year) { isYearExpanded.value = true }
-                    OptionTag(hint = "Genre", tag = viewModel.genre) {
-                        isGenreExpanded.value = true
+                when(configuration.orientation) {
+                    Configuration.ORIENTATION_PORTRAIT -> {
+                        FlowRow(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 2.dp),
+                            mainAxisSpacing = 10.dp,
+                            crossAxisSpacing = 10.dp,
+                        ) {
+                            OptionTag(hint = "Year", tag = viewModel.year) { isYearExpanded.value = true }
+                            OptionTag(hint = "Genre", tag = viewModel.genre) {
+                                isGenreExpanded.value = true
+                            }
+                            OptionTag(hint = "Type", tag = viewModel.type) { isTypeExpanded.value = true }
+                        }
                     }
-                    OptionTag(hint = "Type", tag = viewModel.type) { isTypeExpanded.value = true }
+                    else->{
+
+                    }
                 }
 
             }
         }) {
         Column {
-            Card(
-                modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
-                elevation = 6.dp,
-                backgroundColor = Color.White,
-                shape = RoundedCornerShape(10.dp),
-                border = BorderStroke(width = 0.9.dp, color = Color.Gray)
-            ) {
-                CustomSearchViewBasic(query = viewModel.movieTitle)
+
+            when(configuration.orientation) {
+                Configuration.ORIENTATION_PORTRAIT -> {
+                    Card(
+                        modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
+                        elevation = 6.dp,
+                        backgroundColor = Color.White,
+                        shape = RoundedCornerShape(10.dp),
+                        border = BorderStroke(width = 0.9.dp, color = Color.Gray)
+                    ) {
+                        CustomSearchViewBasic(query = viewModel.movieTitle)
+                    }
+                }
+                else->{
+
+                }
             }
             Column(
                 modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Top,
+                verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 DropDownContainer(
@@ -184,12 +201,29 @@ fun MoviesContainer(viewModel: MoviesViewModel) {
         }
         state.receivedResponse?.let { movieList ->
             val gridState = viewModel.lazyGridState
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(gridCount),
-                state = gridState
-            ) {
-                items(movieList.size - 1) {
-                    MoviesCardDesign(movie = movieList[it])
+
+            when(configuration.orientation) {
+                Configuration.ORIENTATION_LANDSCAPE -> {
+                    LazyHorizontalGrid(
+                        rows = GridCells.Fixed(1),
+                        state = gridState,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        items(movieList.size - 1) {
+                            MoviesCardDesign(movie = movieList[it])
+                        }
+                    }
+                }
+                else -> {
+
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(gridCount),
+                        state = gridState
+                    ) {
+                        items(movieList.size - 1) {
+                            MoviesCardDesign(movie = movieList[it])
+                        }
+                    }
                 }
             }
             if (gridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == gridState.layoutInfo.totalItemsCount - 1) {
