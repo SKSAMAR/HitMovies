@@ -182,7 +182,6 @@ fun MoviesCardDesign(
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
-
                                 /**
                                 if (movie.releaseYear?.year != null) {
                                     var endYear = ""
