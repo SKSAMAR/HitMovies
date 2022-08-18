@@ -2,6 +2,7 @@ package com.samar.hitmovies.data.remote.dto.movieResponse
 
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class PrimaryImage(
     @SerializedName("caption")
@@ -16,4 +17,4 @@ data class PrimaryImage(
     val url: String?,
     @SerializedName("width")
     val width: Int
-)
+):Serializable

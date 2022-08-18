@@ -2,6 +2,7 @@ package com.samar.hitmovies.data.remote.dto.movieResponse
 
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class TitleType(
     @SerializedName("id")
@@ -11,7 +12,7 @@ data class TitleType(
     @SerializedName("isSeries")
     val isSeries: Boolean,
     @SerializedName("text")
-    val text: String,
+    var text: String?,
     @SerializedName("__typename")
     val typename: String
-)
+): Serializable

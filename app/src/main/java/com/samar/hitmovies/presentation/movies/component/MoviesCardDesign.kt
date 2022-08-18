@@ -1,17 +1,18 @@
 package com.samar.hitmovies.presentation.movies.component
 
-import com.samar.hitmovies.R
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -29,22 +30,19 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
-import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
+import com.samar.hitmovies.R
 import com.samar.hitmovies.common.BasicAnimation
 import com.samar.hitmovies.data.remote.dto.movieResponse.MovieDetailDto
 import com.samar.hitmovies.ui.theme.HitMoviesTheme
-import com.skydoves.landscapist.glide.GlideImage
-import java.util.*
 
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MoviesCardDesign(
     movie: MovieDetailDto,
-    clickable: (Objects) -> Unit
 ) {
-
-
+    var expandableState by remember { mutableStateOf(false) }
     val colorGray = Color.Gray
     val colorWhite = Color.White
     val gradientGrayWhite = Brush.verticalGradient(0f to colorGray, 1000f to colorWhite)
@@ -56,7 +54,11 @@ fun MoviesCardDesign(
             start.linkTo(parent.start)
             end.linkTo(parent.end)
             width = Dimension.fillToConstraints
-            height = Dimension.ratio("1:1")
+            if (expandableState){
+                height = Dimension.ratio("1:2")
+            }else{
+                height = Dimension.ratio("1:1.4")
+            }
         }
     }
 
@@ -67,135 +69,160 @@ fun MoviesCardDesign(
         constraintSet = constraintSet
     ) {
         Card(
+            onClick = {
+                expandableState = !expandableState
+                //clickable.invoke(movie)
+            },
             modifier = Modifier
                 .fillMaxSize()
-                .layoutId("genreCard"),
+                .layoutId("genreCard")
+                .animateContentSize( // Animation
+                    animationSpec = tween(
+                        durationMillis = 400, // Animation Speed
+                        easing = LinearOutSlowInEasing // Animation Type
+                    )
+                ),
             shape = RoundedCornerShape(5),
             elevation = 18.dp,
             border = BorderStroke(width = 0.5.dp, color = Color.Black)
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(gradientGrayWhite)
+            Column(
+                modifier = Modifier.fillMaxSize()
             ) {
 
-                if (movie.primaryImage?.url != null) {
-                    Column(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f)
+                        .background(gradientGrayWhite)
+                ) {
 
-                        SubcomposeAsyncImage(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .weight(1f),
-                            model = movie.primaryImage.url,
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            loading = {
-                                BasicAnimation()
-                            }
-
-                        )
-
-//                        GlideImage(
-//                            modifier = Modifier
-//                                .fillMaxSize()
-//                                .weight(1f),
-//                            imageModel = movie.primaryImage.url,
-//                            // Crop, Fit, Inside, FillHeight, FillWidth, None
-//                            contentScale = ContentScale.Crop,
-//                            placeHolder = painterResource(id = R.drawable.clapperboard),
-//                            // shows an error ImageBitmap when the request failed.
-//                            error = painterResource(id = R.drawable.no_pictures),
-//                        )
+                    if (movie.primaryImage?.url != null) {
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 2.dp)
+                            modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = movie.titleText.text,
-                                style = TextStyle(
-                                    color = Color.Black,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    fontSize = 12.sp,
-                                    textAlign = TextAlign.Center,
-                                    shadow = Shadow(color = Color.White)
-                                ),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+
+                            SubcomposeAsyncImage(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .weight(1f),
+                                model = movie.primaryImage.url,
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                loading = {
+                                    BasicAnimation()
+                                }
+
                             )
-                            if (movie.releaseYear?.year != null) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 2.dp)
+                            ) {
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = movie.releaseYear.year.toString(),
+                                    text = movie.titleText.text,
                                     style = TextStyle(
                                         color = Color.Black,
                                         fontWeight = FontWeight.ExtraBold,
-                                        fontSize = 8.sp,
+                                        fontSize = 12.sp,
                                         textAlign = TextAlign.Center,
                                         shadow = Shadow(color = Color.White)
                                     ),
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
+                                /**
+                                if (movie.releaseYear?.year != null) {
+                                    Text(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        text = movie.releaseYear.year.toString(),
+                                        style = TextStyle(
+                                            color = Color.Black,
+                                            fontWeight = FontWeight.ExtraBold,
+                                            fontSize = 8.sp,
+                                            textAlign = TextAlign.Center,
+                                            shadow = Shadow(color = Color.White)
+                                        ),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }**/
                             }
+
                         }
 
-                    }
-
-                } else {
-                    Column(
-                        modifier = Modifier.fillMaxSize()
-                    ) {
-                        Image(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .weight(1f),
-                            contentScale = ContentScale.FillBounds,
-                            painter = painterResource(id = R.drawable.clapperboard),
-                            contentDescription = "no image"
-                        )
+                    } else {
                         Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(bottom = 2.dp)
+                            modifier = Modifier.fillMaxWidth()
                         ) {
-                            Text(
-                                modifier = Modifier.fillMaxWidth(),
-                                text = movie.titleText.text,
-                                style = TextStyle(
-                                    color = Color.Black,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    fontSize = 12.sp,
-                                    textAlign = TextAlign.Center,
-                                    shadow = Shadow(color = Color.White)
-                                ),
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
+                            Image(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .weight(1f),
+                                contentScale = ContentScale.FillBounds,
+                                painter = painterResource(id = R.drawable.clapperboard),
+                                contentDescription = "no image"
                             )
-
-                            if (movie.releaseYear?.year != null) {
+                            Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(bottom = 2.dp)
+                            ) {
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
-                                    text = movie.releaseYear.year.toString(),
+                                    text = movie.titleText.text,
                                     style = TextStyle(
                                         color = Color.Black,
                                         fontWeight = FontWeight.ExtraBold,
-                                        fontSize = 8.sp,
+                                        fontSize = 12.sp,
                                         textAlign = TextAlign.Center,
                                         shadow = Shadow(color = Color.White)
                                     ),
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
+
+                                /**
+                                if (movie.releaseYear?.year != null) {
+                                    var endYear = ""
+                                    movie.releaseYear.endYear?.let {
+                                        endYear = " - ${movie.releaseYear.endYear}"
+                                    }
+                                    Text(
+                                        modifier = Modifier.fillMaxWidth(),
+                                        text = movie.releaseYear.year.toString() + endYear,
+                                        style = TextStyle(
+                                            color = Color.Black,
+                                            fontWeight = FontWeight.ExtraBold,
+                                            fontSize = 8.sp,
+                                            textAlign = TextAlign.Center,
+                                            shadow = Shadow(color = Color.White)
+                                        ),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                                **/
                             }
                         }
                     }
                 }
+                if (expandableState) {
+                    movie.primaryImage?.caption?.plainText?.let { capation ->
+                        Text(
+                            text = capation,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 5.dp, horizontal = 5.dp),
+                            style = MaterialTheme.typography.overline,
+                            color = MaterialTheme.colors.primary,
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
             }
+
         }
     }
 }

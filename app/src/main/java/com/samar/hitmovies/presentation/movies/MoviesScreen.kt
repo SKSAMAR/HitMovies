@@ -1,5 +1,7 @@
 package com.samar.hitmovies.presentation.movies
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -11,11 +13,14 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.flowlayout.FlowRow
 import com.samar.hitmovies.R
 import com.samar.hitmovies.common.BasicAnimation
+import com.samar.hitmovies.common.Constants
+import com.samar.hitmovies.presentation.MoviesDetailActivity
 import com.samar.hitmovies.presentation.common.OptionTag
 import com.samar.hitmovies.presentation.movies.component.MoviesCardDesign
 import com.samar.hitmovies.util.CustomSearchViewBasic
@@ -171,18 +176,26 @@ fun MoviesContainer(viewModel: MoviesViewModel) {
             }
         }
         state.receivedResponse?.let { movieList ->
-            val gridState = rememberLazyGridState()
+            val gridState = viewModel.lazyGridState
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 state = gridState
             ) {
                 items(movieList.size - 1) {
-                    MoviesCardDesign(movie = movieList[it], clickable = {})
+                    MoviesCardDesign(movie = movieList[it])
                 }
             }
             if (gridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == gridState.layoutInfo.totalItemsCount - 1) {
                 viewModel.getNext()
             }
+
+            /**
+            clickable = {movie->
+            val intent = Intent(context, MoviesDetailActivity::class.java)
+            intent.putExtra(Constants.MovieData, movie)
+            context.startActivity(intent)
+            }
+             **/
         }
         if (state.isLoading) {
             BasicAnimation(

@@ -2,6 +2,7 @@ package com.samar.hitmovies.data.remote.dto.movieResponse
 
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class ReleaseDate(
     @SerializedName("day")
@@ -12,4 +13,4 @@ data class ReleaseDate(
     val typename: String,
     @SerializedName("year")
     val year: Int
-)
+): Serializable

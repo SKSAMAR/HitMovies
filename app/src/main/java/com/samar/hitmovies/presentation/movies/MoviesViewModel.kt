@@ -1,6 +1,7 @@
 package com.samar.hitmovies.presentation.movies
 
 import android.util.Log
+import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.samar.hitmovies.common.BaseViewModel
@@ -21,6 +22,7 @@ import javax.inject.Inject
 class MoviesViewModel
 @Inject constructor( private val getMoviesUseCase: GetMoviesUseCase): BaseViewModel<ArrayList<MovieDetailDto>>() {
 
+    val lazyGridState = LazyGridState()
     val movieTitle = mutableStateOf("")
     var next: String? = null
     var genre = mutableStateOf("Action")
