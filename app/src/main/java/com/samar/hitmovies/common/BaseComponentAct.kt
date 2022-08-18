@@ -22,9 +22,10 @@ import androidx.compose.ui.unit.sp
 import com.samar.hitmovies.ui.theme.IconColor
 import com.samar.hitmovies.util.ConnectionLiveData
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
 
 
-    @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
     @Composable
     fun BaseScaffold(
         title: String = "",
@@ -32,12 +33,12 @@ import dagger.hilt.android.AndroidEntryPoint
         color: Color = IconColor,
         action: () -> Unit = {},
         connectionLiveData: ConnectionLiveData = ConnectionLiveData(LocalContext.current),
+        scaffoldState: ScaffoldState = rememberScaffoldState(),
+        coroutineScope: CoroutineScope = rememberCoroutineScope(),
         content: @Composable BoxScope.() -> Unit
     ) {
 
         val isNetworkAvailable = connectionLiveData.observeAsState(true)
-        val scaffoldState = rememberScaffoldState()
-        val coroutineScope = rememberCoroutineScope()
         Scaffold(
             topBar = {
                 TopAppBar(

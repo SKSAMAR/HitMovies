@@ -1,9 +1,9 @@
 package com.samar.hitmovies.presentation.genres
 
+/**
 import androidx.lifecycle.viewModelScope
 import com.samar.hitmovies.common.BaseViewModel
 import com.samar.hitmovies.common.Resource
-import com.samar.hitmovies.data.remote.dto.GenreDto
 import com.samar.hitmovies.domain.model.ScreenState
 import com.samar.hitmovies.domain.uses_cases.getGenres.GetGenresUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GenreViewModel
-@Inject constructor( private val getGenresUseCase: GetGenresUseCase): BaseViewModel<List<GenreDto>>() {
+@Inject constructor( private val getGenresUseCase: GetGenresUseCase): BaseViewModel<List<Objects>>() {
     init {
         getGenres()
     }
@@ -37,3 +37,4 @@ class GenreViewModel
 
 
 }
+ **/
