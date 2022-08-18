@@ -54,10 +54,10 @@ fun MoviesCardDesign(
             start.linkTo(parent.start)
             end.linkTo(parent.end)
             width = Dimension.fillToConstraints
-            if (expandableState){
-                height = Dimension.ratio("1:2")
+            height = if (expandableState){
+                Dimension.ratio("1:2")
             }else{
-                height = Dimension.ratio("1:1.4")
+                Dimension.ratio("1:1.4")
             }
         }
     }
