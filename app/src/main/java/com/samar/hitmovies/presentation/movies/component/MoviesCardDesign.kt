@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
+import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
 import com.samar.hitmovies.R
 import com.samar.hitmovies.common.BasicAnimation
@@ -98,116 +99,40 @@ fun MoviesCardDesign(
                         .background(gradientGrayWhite)
                 ) {
 
-                    if (movie.primaryImage?.url != null) {
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        val noImage = "https://cdn11.bigcommerce.com/s-y76tsfzldy/images/stencil/original/products/7720/20309/360_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3__32888.1644948713.jpg"
+                        AsyncImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            model = movie.primaryImage?.url?:noImage,
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                        )
                         Column(
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 2.dp)
                         ) {
-
-                            SubcomposeAsyncImage(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .weight(1f),
-                                model = movie.primaryImage.url,
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop,
-                                loading = {
-                                    BasicAnimation()
-                                }
-
+                            Text(
+                                modifier = Modifier.fillMaxWidth(),
+                                text = movie.titleText.text,
+                                style = TextStyle(
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontSize = 12.sp,
+                                    textAlign = TextAlign.Center,
+                                    shadow = Shadow(color = Color.White)
+                                ),
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 2.dp)
-                            ) {
-                                Text(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    text = movie.titleText.text,
-                                    style = TextStyle(
-                                        color = Color.Black,
-                                        fontWeight = FontWeight.ExtraBold,
-                                        fontSize = 12.sp,
-                                        textAlign = TextAlign.Center,
-                                        shadow = Shadow(color = Color.White)
-                                    ),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                /**
-                                if (movie.releaseYear?.year != null) {
-                                    Text(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        text = movie.releaseYear.year.toString(),
-                                        style = TextStyle(
-                                            color = Color.Black,
-                                            fontWeight = FontWeight.ExtraBold,
-                                            fontSize = 8.sp,
-                                            textAlign = TextAlign.Center,
-                                            shadow = Shadow(color = Color.White)
-                                        ),
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                }**/
-                            }
-
                         }
 
-                    } else {
-                        Column(
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Image(
-                                modifier = Modifier
-                                    .fillMaxSize()
-                                    .weight(1f),
-                                contentScale = ContentScale.FillBounds,
-                                painter = painterResource(id = R.drawable.clapperboard),
-                                contentDescription = "no image"
-                            )
-                            Column(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(bottom = 2.dp)
-                            ) {
-
-                                Text(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    text = movie.titleText.text,
-                                    style = TextStyle(
-                                        color = Color.Black,
-                                        fontWeight = FontWeight.ExtraBold,
-                                        fontSize = 12.sp,
-                                        textAlign = TextAlign.Center,
-                                        shadow = Shadow(color = Color.White)
-                                    ),
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
-                                )
-                                /**
-                                if (movie.releaseYear?.year != null) {
-                                    var endYear = ""
-                                    movie.releaseYear.endYear?.let {
-                                        endYear = " - ${movie.releaseYear.endYear}"
-                                    }
-                                    Text(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        text = movie.releaseYear.year.toString() + endYear,
-                                        style = TextStyle(
-                                            color = Color.Black,
-                                            fontWeight = FontWeight.ExtraBold,
-                                            fontSize = 8.sp,
-                                            textAlign = TextAlign.Center,
-                                            shadow = Shadow(color = Color.White)
-                                        ),
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Ellipsis
-                                    )
-                                }
-                                **/
-                            }
-                        }
                     }
+
                 }
                 if (expandableState) {
                     movie.primaryImage?.caption?.plainText?.let { capation ->
