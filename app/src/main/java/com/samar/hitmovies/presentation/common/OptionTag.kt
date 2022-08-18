@@ -36,7 +36,7 @@ fun<T> OptionTag(
             style = MaterialTheme.typography.overline
         )
         Text(
-            text = tag.value.toString(),
+            text = if(tag.value.toString() == "0")"All" else tag.value.toString(),
             color = MaterialTheme.colors.primary,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.body2

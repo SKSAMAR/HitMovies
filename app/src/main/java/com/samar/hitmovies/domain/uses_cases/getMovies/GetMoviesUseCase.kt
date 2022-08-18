@@ -14,10 +14,10 @@ import kotlin.collections.ArrayList
 class GetMoviesUseCase
 @Inject constructor(private val repository: MovieRepository) {
 
-    operator fun invoke(page: Int, genre: String, year: Int, type: String): Flow<Resource<MovieFetchResponse>> = flow {
+    operator fun invoke(url: String): Flow<Resource<MovieFetchResponse>> = flow {
         try {
             emit(Resource.Loading())
-            val movies = repository.getTitles(page = page, genre = genre, titleType = type.toLowerCase(), year = year)
+            val movies = repository.getTitles(url)
             if(!movies.message.isNullOrEmpty()){
                 emit(Resource.Error(movies.message!!))
             }
@@ -42,15 +42,11 @@ class GetMoviesUseCase
 
 
     fun getMoviesByTitle(
-        movieName: String,
-        info: String = "mini_info",
-        limit: Int = 30,
-        page: Int = 1,
-        titleType: String
+        url: String
     ): Flow<Resource<MovieFetchResponse>> = flow {
         try {
             emit(Resource.Loading())
-            val movies = repository.getMoviesByTitle(movieName, info, limit, page, titleType)
+            val movies = repository.getMoviesByTitle(url)
             if(!movies.message.isNullOrEmpty()){
                 emit(Resource.Error(movies.message!!))
             }

@@ -6,19 +6,19 @@ import java.util.*
 interface MovieRepository {
     suspend fun getGenres(): Objects
     suspend fun getNext(next: String): MovieFetchResponse
+//    suspend fun getTitles(
+//        info: String = "mini_info",
+//        limit: Int = 30,
+//        page: Int = 1,
+//        titleType: String,
+//        genre: String,
+//        year: Int
+//    ): MovieFetchResponse
+
     suspend fun getTitles(
-        info: String = "mini_info",
-        limit: Int = 30,
-        page: Int = 1,
-        titleType: String,
-        genre: String,
-        year: Int
+        url: String
     ): MovieFetchResponse
     suspend fun getMoviesByTitle(
-        movieName: String,
-        info: String = "mini_info",
-        limit: Int = 30,
-        page: Int = 1,
-        titleType: String
+        url: String
     ): MovieFetchResponse
 }

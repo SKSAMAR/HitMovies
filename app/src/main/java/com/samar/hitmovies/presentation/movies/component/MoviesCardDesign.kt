@@ -35,6 +35,7 @@ import com.samar.hitmovies.R
 import com.samar.hitmovies.common.BasicAnimation
 import com.samar.hitmovies.data.remote.dto.movieResponse.MovieDetailDto
 import com.samar.hitmovies.ui.theme.HitMoviesTheme
+import javax.annotation.Untainted
 
 
 @OptIn(ExperimentalMaterialApi::class)

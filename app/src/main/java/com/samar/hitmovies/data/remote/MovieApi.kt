@@ -13,27 +13,27 @@ interface MovieApi {
     suspend fun getGenres(): Objects
 
 
-    @GET("/titles")
+//    @GET("/titles")
+//    suspend fun getTitles(
+//        @Query("info") info: String = "mini_info",
+//        @Query("limit") limit: Int = 30,
+//        @Query("page") page: Int = 1,
+//        @Query("titleType") titleType: String = "movie",
+//        @Query("genre") genre: String,
+//        @Query("year") year: Int
+//    ): MovieFetchResponse
+
+
+    @GET
     suspend fun getTitles(
-        @Query("info") info: String = "mini_info",
-        @Query("limit") limit: Int = 30,
-        @Query("page") page: Int = 1,
-        @Query("titleType") titleType: String = "movie",
-        @Query("genre") genre: String,
-        @Query("year") year: Int
+        @Url url: String
     ): MovieFetchResponse
 
     @GET
     suspend fun getNext(@Url next: String): MovieFetchResponse
 
 
-    @GET("/titles/search/title/{movieName}")
-    suspend fun getMoviesByTitle(
-        @Path("movieName") movieName: String,
-        @Query("info") info: String = "mini_info",
-        @Query("limit") limit: Int = 30,
-        @Query("page") page: Int = 1,
-        @Query("titleType") titleType: String
-        ): MovieFetchResponse
+    @GET
+    suspend fun getMoviesByTitle(@Url url: String): MovieFetchResponse
 
 }

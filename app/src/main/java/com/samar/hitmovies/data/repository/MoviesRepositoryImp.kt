@@ -15,30 +15,28 @@ class MoviesRepositoryImp(private val movieApi: MovieApi): MovieRepository {
         return movieApi.getNext(next)
     }
 
+//    override suspend fun getTitles(
+//        info: String,
+//        limit: Int,
+//        page: Int,
+//        titleType: String,
+//        genre: String,
+//        year: Int
+//    ): MovieFetchResponse {
+//        return movieApi.getTitles(info, limit, page, titleType, genre, year)
+//    }
+
     override suspend fun getTitles(
-        info: String,
-        limit: Int,
-        page: Int,
-        titleType: String,
-        genre: String,
-        year: Int
+        url: String,
     ): MovieFetchResponse {
-        return movieApi.getTitles(info, limit, page, titleType, genre, year)
+        return movieApi.getTitles(url)
     }
 
     override suspend fun getMoviesByTitle(
-        movieName: String,
-        info: String,
-        limit: Int,
-        page: Int,
-        titleType: String
+        url: String
     ):  MovieFetchResponse{
         return movieApi.getMoviesByTitle(
-            movieName,
-            info,
-            limit,
-            page,
-            titleType
+        url
         )
     }
 

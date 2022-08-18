@@ -1,26 +1,21 @@
 package com.samar.hitmovies.presentation.movies
 
-import android.content.Context
-import android.content.Intent
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.flowlayout.FlowRow
 import com.samar.hitmovies.R
 import com.samar.hitmovies.common.BasicAnimation
-import com.samar.hitmovies.common.Constants
-import com.samar.hitmovies.presentation.MoviesDetailActivity
 import com.samar.hitmovies.presentation.common.OptionTag
 import com.samar.hitmovies.presentation.movies.component.MoviesCardDesign
 import com.samar.hitmovies.util.CustomSearchViewBasic
@@ -108,7 +103,7 @@ fun DropDownContainer(
                 isYearExpanded.value = false
                 viewModel.getMovies()
             }) {
-                Text(text = label.toString())
+                Text(text = if(label==0)"All" else label.toString())
             }
         }
     }
@@ -155,6 +150,18 @@ fun MoviesContainer(viewModel: MoviesViewModel) {
         viewModel.getGenreList()
         viewModel.getTypeList()
     }
+    val configuration = LocalConfiguration.current
+    var gridCount by remember {
+        mutableStateOf(2)
+    }
+    gridCount = when(configuration.orientation) {
+        Configuration.ORIENTATION_LANDSCAPE -> {
+            4
+        }
+        else -> {
+            2
+        }
+    }
 
     Box(modifier = Modifier.fillMaxSize()) {
         val state = viewModel.state.value
@@ -178,7 +185,7 @@ fun MoviesContainer(viewModel: MoviesViewModel) {
         state.receivedResponse?.let { movieList ->
             val gridState = viewModel.lazyGridState
             LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
+                columns = GridCells.Fixed(gridCount),
                 state = gridState
             ) {
                 items(movieList.size - 1) {
