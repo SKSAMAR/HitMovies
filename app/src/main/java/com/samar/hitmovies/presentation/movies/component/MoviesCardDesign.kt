@@ -169,6 +169,7 @@ fun MoviesCardDesign(
                                     .fillMaxWidth()
                                     .padding(bottom = 2.dp)
                             ) {
+
                                 Text(
                                     modifier = Modifier.fillMaxWidth(),
                                     text = movie.titleText.text,
