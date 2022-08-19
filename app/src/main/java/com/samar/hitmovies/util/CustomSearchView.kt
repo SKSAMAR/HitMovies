@@ -76,7 +76,8 @@ fun CustomSearchViewBasic(
             Icon(
                 Icons.Filled.Search,
                 null,
-                tint = LocalContentColor.current.copy(alpha = 0.4f)
+                tint = LocalContentColor.current.copy(alpha = 0.4f),
+                modifier = Modifier.padding(end = 20.dp)
             )
         },
         trailingIcon = null,

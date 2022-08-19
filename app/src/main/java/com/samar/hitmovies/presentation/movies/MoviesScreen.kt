@@ -3,7 +3,10 @@ package com.samar.hitmovies.presentation.movies
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.*
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -64,7 +67,11 @@ fun MoviesScreen(viewModel: MoviesViewModel, navController: NavController) {
                                     navController.navigate(ScreenNav.FAVOURITE.route)
                                 }
                             ) {
-                                Icon(imageVector = Icons.Default.ThumbUp, contentDescription = "")
+                                Icon(
+                                    imageVector = Icons.Default.ThumbUp,
+                                    contentDescription = "",
+                                    tint = MaterialTheme.colors.primary
+                                )
                             }
                         }
                     }
@@ -80,11 +87,11 @@ fun MoviesScreen(viewModel: MoviesViewModel, navController: NavController) {
             when(configuration.orientation) {
                 Configuration.ORIENTATION_PORTRAIT -> {
                     Card(
-                        modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
-                        elevation = 6.dp,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp),
+                        elevation = 16.dp,
                         backgroundColor = Color.White,
                         shape = RoundedCornerShape(10.dp),
-                        border = BorderStroke(width = 0.9.dp, color = Color.Gray)
+//                        border = BorderStroke(width = 0.9.dp, color = Color.Gray)
                     ) {
                         CustomSearchViewBasic(query = viewModel.movieTitle)
                     }
@@ -222,21 +229,23 @@ fun MoviesContainer(viewModel: MoviesViewModel, configuration: Configuration) {
                             MoviesCardDesign(movie = movieList[it], action = { viewModel.addToFavourite(movieList[it]) })
                         }
                     }
+                    if (gridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == gridState.layoutInfo.totalItemsCount - 1) {
+                        viewModel.getNext()
+                    }
                 }
                 else -> {
-
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(gridCount),
-                        state = gridState
+                    val columnState = rememberLazyListState()
+                    LazyColumn(
+                        state = columnState,
                     ) {
                         items(movieList) {
                             MoviesCardDesign(movie = it, action = { viewModel.addToFavourite(it) })
                         }
                     }
+                    if (columnState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == columnState.layoutInfo.totalItemsCount - 1) {
+                        viewModel.getNext()
+                    }
                 }
-            }
-            if (gridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == gridState.layoutInfo.totalItemsCount - 1) {
-                viewModel.getNext()
             }
 
         }

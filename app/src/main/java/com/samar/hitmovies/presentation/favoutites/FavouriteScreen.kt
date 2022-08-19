@@ -60,11 +60,11 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = hiltViewModel()) {
             when(configuration.orientation) {
                 Configuration.ORIENTATION_PORTRAIT -> {
                     Card(
-                        modifier = Modifier.padding(horizontal = 18.dp, vertical = 12.dp),
-                        elevation = 6.dp,
+                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp),
+                        elevation = 16.dp,
                         backgroundColor = Color.White,
                         shape = RoundedCornerShape(10.dp),
-                        border = BorderStroke(width = 0.9.dp, color = Color.Gray)
+//                        border = BorderStroke(width = 0.9.dp, color = Color.Gray)
                     ) {
                         CustomSearchViewBasic(query = viewModel.movieTitle)
                     }

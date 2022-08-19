@@ -72,7 +72,7 @@ fun MoviesCardDesign(
                 var ratio = "1.4:1"
                 when (configuration.orientation) {
                     Configuration.ORIENTATION_PORTRAIT -> {
-                        ratio = "1:2"
+                        ratio = "1:1.5"
                     }
                     else -> {
                         ratio = "1.4:1"
@@ -80,7 +80,7 @@ fun MoviesCardDesign(
                 }
                 Dimension.ratio(ratio)
             } else {
-                Dimension.ratio("1:1.4")
+                Dimension.ratio("1:1")
             }
         }
     }
@@ -180,7 +180,7 @@ fun MoviesCardDesign(
                         Icon(
                             imageVector = if(isDislike) Icons.Default.Delete else Icons.Default.ThumbUp,
                             contentDescription = "like_dislike",
-                            tint = MaterialTheme.colors.primary
+                            tint = if(isDislike) Color.Red else MaterialTheme.colors.primary
                         )
                     }
 
