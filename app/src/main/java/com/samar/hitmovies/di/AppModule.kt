@@ -1,10 +1,12 @@
 package com.samar.hitmovies.di
 
 import android.content.Context
+import androidx.room.Room
 import com.google.gson.FieldNamingPolicy
 import com.google.gson.GsonBuilder
 import com.samar.hitmovies.R
 import com.samar.hitmovies.common.Constants.BASE_URL
+import com.samar.hitmovies.data.db.MovieDatabase
 import com.samar.hitmovies.data.remote.MovieApi
 import com.samar.hitmovies.data.repository.MoviesRepositoryImp
 import com.samar.hitmovies.domain.repository.MovieRepository
@@ -29,7 +31,6 @@ import javax.inject.Singleton
 object AppModule {
 
 
-
     @Singleton
     @Provides
     fun getHttpLoggingInterceptor(): HttpLoggingInterceptor {
@@ -52,10 +53,10 @@ object AppModule {
             .readTimeout(5, TimeUnit.MINUTES)
             .writeTimeout(5, TimeUnit.MINUTES)
             .addInterceptor(httpLoggingInterceptor)
-            httpClient.addInterceptor(Interceptor { chain: Interceptor.Chain ->
+        httpClient.addInterceptor(Interceptor { chain: Interceptor.Chain ->
             val request: Request = chain.request().newBuilder()
                 .addHeader("X-RapidAPI-Host", context.resources.getString(R.string.Host))
-                .addHeader("X-RapidAPI-Key",context.resources.getString(R.string.Key))
+                .addHeader("X-RapidAPI-Key", context.resources.getString(R.string.Key))
                 .build()
             val response: Response = chain.proceed(request)
             response
@@ -82,8 +83,19 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun getMovieRepository(movieApi: MovieApi): MovieRepository {
-        return MoviesRepositoryImp(movieApi)
+    fun getMovieRepository(movieApi: MovieApi, movieDatabase: MovieDatabase): MovieRepository {
+        return MoviesRepositoryImp(movieApi, movieDatabase)
     }
+
+    @Singleton
+    @Provides
+    fun getMovieDatabase(@ApplicationContext context: Context): MovieDatabase =
+        Room.databaseBuilder(
+            context.applicationContext,
+            MovieDatabase::class.java,
+            "movieContentDb"
+        ).allowMainThreadQueries()
+            .fallbackToDestructiveMigration()
+            .build()
 
 }

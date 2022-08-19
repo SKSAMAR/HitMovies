@@ -8,20 +8,26 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -34,6 +40,7 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import coil.compose.AsyncImage
 import coil.compose.SubcomposeAsyncImage
+import coil.request.ImageRequest
 import com.samar.hitmovies.R
 import com.samar.hitmovies.common.BasicAnimation
 import com.samar.hitmovies.data.remote.dto.movieResponse.MovieDetailDto
@@ -45,6 +52,8 @@ import javax.annotation.Untainted
 @Composable
 fun MoviesCardDesign(
     movie: MovieDetailDto,
+    action:()->Unit,
+    isDislike: Boolean = false
 ) {
     val configuration = LocalConfiguration.current
     var expandableState by remember { mutableStateOf(false) }
@@ -59,18 +68,18 @@ fun MoviesCardDesign(
             start.linkTo(parent.start)
             end.linkTo(parent.end)
             width = Dimension.fillToConstraints
-            height = if (expandableState){
+            height = if (expandableState) {
                 var ratio = "1.4:1"
-                when(configuration.orientation){
+                when (configuration.orientation) {
                     Configuration.ORIENTATION_PORTRAIT -> {
                         ratio = "1:2"
                     }
-                    else->{
+                    else -> {
                         ratio = "1.4:1"
                     }
                 }
                 Dimension.ratio(ratio)
-            }else{
+            } else {
                 Dimension.ratio("1:1.4")
             }
         }
@@ -111,18 +120,35 @@ fun MoviesCardDesign(
                         .background(gradientGrayWhite)
                 ) {
 
+
                     Column(
                         modifier = Modifier.fillMaxWidth()
                     ) {
-                        val noImage = "https://cdn11.bigcommerce.com/s-y76tsfzldy/images/stencil/original/products/7720/20309/360_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3__32888.1644948713.jpg"
+
+                        val noImage =
+                            "https://cdn11.bigcommerce.com/s-y76tsfzldy/images/stencil/original/products/7720/20309/360_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3__32888.1644948713.jpg"
+
                         AsyncImage(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .weight(1f),
-                            model = movie.primaryImage?.url?:noImage,
+                            model = ImageRequest.Builder(LocalContext.current)
+                                .data(movie.primaryImage?.url ?: noImage)
+                                .crossfade(true)
+                                .build(),
+                            placeholder = painterResource(R.drawable.clapperboard),
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
+                            modifier = Modifier.clip(RectangleShape)
+                                .fillMaxWidth()
+                                .weight(1f)
                         )
+
+//                        AsyncImage(
+//                            modifier = Modifier
+//                                .fillMaxWidth()
+//                                .weight(1f),
+//                            model = movie.primaryImage?.url ?: noImage,
+//                            contentDescription = null,
+//                            contentScale = ContentScale.Crop,
+//                        )
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -143,6 +169,19 @@ fun MoviesCardDesign(
                             )
                         }
 
+                    }
+
+                    IconButton(
+                        modifier = Modifier.align(Alignment.TopEnd),
+                        onClick = {
+                            action.invoke()
+                        }
+                    ) {
+                        Icon(
+                            imageVector = if(isDislike) Icons.Default.Delete else Icons.Default.ThumbUp,
+                            contentDescription = "like_dislike",
+                            tint = MaterialTheme.colors.primary
+                        )
                     }
 
                 }

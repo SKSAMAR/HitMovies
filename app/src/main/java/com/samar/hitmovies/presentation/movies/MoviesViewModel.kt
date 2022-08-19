@@ -1,5 +1,6 @@
 package com.samar.hitmovies.presentation.movies
 
+import android.util.Log
 import androidx.compose.foundation.lazy.grid.LazyGridState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
@@ -11,15 +12,17 @@ import com.samar.hitmovies.domain.model.ScreenState
 import com.samar.hitmovies.domain.model.TypeModel
 import com.samar.hitmovies.domain.uses_cases.getMovies.GetMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class MoviesViewModel
 @Inject constructor( private val getMoviesUseCase: GetMoviesUseCase): BaseViewModel<ArrayList<MovieDetailDto>>() {
 
-    val lazyGridState = LazyGridState()
     val movieTitle = mutableStateOf("")
     var next: String? = null
     var genre = mutableStateOf("Comedy")
@@ -69,29 +72,28 @@ class MoviesViewModel
     }
 
     fun getNext(){
-        if(isAccessable()){
-            next?.let {
-                val oldList = _state.value.receivedResponse
-                getMoviesUseCase.getNextMovie(it, updateNext = { up-> next = up }).onEach {
-                    when(it){
-                        is Resource.Success->{
-                            it.data?.let {movieFetchResponse->
-                                oldList?.let {old->
-                                    oldList.addAll(it.data.results)
-                                }
-                                _state.value = ScreenState(receivedResponse = oldList)
+        Log.d("CallingNext", "CallingNext")
+        next?.let {
+            val oldList = _state.value.receivedResponse
+            getMoviesUseCase.getNextMovie(it, updateNext = { up-> next = up }).onEach {
+                when(it){
+                    is Resource.Success->{
+                        it.data?.let {movieFetchResponse->
+                            oldList?.let {old->
+                                oldList.addAll(it.data.results)
                             }
-                        }
-                        is Resource.Error->{
-                            _state.value = ScreenState(error = it.message?:"Some Error", receivedResponse = oldList)
-                        }
-                        is Resource.Loading->{
-                            _state.value = ScreenState(isLoading = true, receivedResponse = oldList)
-                            next = null
+                            _state.value = ScreenState(receivedResponse = oldList)
                         }
                     }
-                }.launchIn(viewModelScope)
-            }
+                    is Resource.Error->{
+                        _state.value = ScreenState(error = it.message?:"Some Error", receivedResponse = oldList)
+                    }
+                    is Resource.Loading->{
+                        _state.value = ScreenState(isLoading = true, receivedResponse = oldList)
+                        next = null
+                    }
+                }
+            }.launchIn(viewModelScope)
         }
     }
 
@@ -146,6 +148,7 @@ class MoviesViewModel
 
     fun getTypeList():List<TypeModel>{
         if(typeList.isEmpty()){
+
             typeList.add(TypeModel("all", "All"))
             typeList.add(TypeModel("movie", "Movie"))
             typeList.add(TypeModel("podcastEpisode", "Podcast Episode"))
@@ -197,5 +200,12 @@ class MoviesViewModel
             genreList.add("Western")
         }
         return genreList
+    }
+
+    fun addToFavourite(movieDetailDto: MovieDetailDto){
+        viewModelScope.launch(Dispatchers.IO) {
+            val result = getMoviesUseCase.addToFavourite(movieDetailDto)
+            Log.d("InsertResultIs", result.toString()?:"Null")
+        }
     }
 }

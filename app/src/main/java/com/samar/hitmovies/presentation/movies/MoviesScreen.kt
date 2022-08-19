@@ -3,29 +3,31 @@ package com.samar.hitmovies.presentation.movies
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.google.accompanist.flowlayout.FlowRow
 import com.samar.hitmovies.R
 import com.samar.hitmovies.common.BasicAnimation
 import com.samar.hitmovies.presentation.common.OptionTag
 import com.samar.hitmovies.presentation.movies.component.MoviesCardDesign
 import com.samar.hitmovies.util.CustomSearchViewBasic
+import com.samar.hitmovies.util.ScreenNav
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
 @Composable
-fun MoviesScreen(viewModel: MoviesViewModel) {
+fun MoviesScreen(viewModel: MoviesViewModel, navController: NavController) {
     val configuration = LocalConfiguration.current
     val isYearExpanded = remember { mutableStateOf(false) }
     val isGenreExpanded = remember { mutableStateOf(false) }
@@ -56,6 +58,14 @@ fun MoviesScreen(viewModel: MoviesViewModel) {
                                 isGenreExpanded.value = true
                             }
                             OptionTag(hint = "Type", tag = viewModel.type) { isTypeExpanded.value = true }
+
+                            IconButton(
+                                onClick = {
+                                    navController.navigate(ScreenNav.FAVOURITE.route)
+                                }
+                            ) {
+                                Icon(imageVector = Icons.Default.ThumbUp, contentDescription = "")
+                            }
                         }
                     }
                     else->{
@@ -94,7 +104,7 @@ fun MoviesScreen(viewModel: MoviesViewModel) {
                     isTypeExpanded = isTypeExpanded,
                     isYearExpanded = isYearExpanded
                 )
-                MoviesContainer(viewModel)
+                MoviesContainer(viewModel, configuration)
             }
         }
     }
@@ -159,7 +169,7 @@ fun DropDownContainer(
 }
 
 @Composable
-fun MoviesContainer(viewModel: MoviesViewModel) {
+fun MoviesContainer(viewModel: MoviesViewModel, configuration: Configuration) {
 
     LaunchedEffect(key1 = viewModel.movieTitle.value) {
         viewModel.getMoviesByName()
@@ -167,7 +177,6 @@ fun MoviesContainer(viewModel: MoviesViewModel) {
         viewModel.getGenreList()
         viewModel.getTypeList()
     }
-    val configuration = LocalConfiguration.current
     var gridCount by remember {
         mutableStateOf(2)
     }
@@ -200,7 +209,7 @@ fun MoviesContainer(viewModel: MoviesViewModel) {
             }
         }
         state.receivedResponse?.let { movieList ->
-            val gridState = viewModel.lazyGridState
+            val gridState = rememberLazyGridState()
 
             when(configuration.orientation) {
                 Configuration.ORIENTATION_LANDSCAPE -> {
@@ -210,7 +219,7 @@ fun MoviesContainer(viewModel: MoviesViewModel) {
                         verticalArrangement = Arrangement.Center
                     ) {
                         items(movieList.size - 1) {
-                            MoviesCardDesign(movie = movieList[it])
+                            MoviesCardDesign(movie = movieList[it], action = { viewModel.addToFavourite(movieList[it]) })
                         }
                     }
                 }
@@ -220,8 +229,8 @@ fun MoviesContainer(viewModel: MoviesViewModel) {
                         columns = GridCells.Fixed(gridCount),
                         state = gridState
                     ) {
-                        items(movieList.size - 1) {
-                            MoviesCardDesign(movie = movieList[it])
+                        items(movieList) {
+                            MoviesCardDesign(movie = it, action = { viewModel.addToFavourite(it) })
                         }
                     }
                 }
@@ -230,13 +239,6 @@ fun MoviesContainer(viewModel: MoviesViewModel) {
                 viewModel.getNext()
             }
 
-            /**
-            clickable = {movie->
-            val intent = Intent(context, MoviesDetailActivity::class.java)
-            intent.putExtra(Constants.MovieData, movie)
-            context.startActivity(intent)
-            }
-             **/
         }
         if (state.isLoading) {
             BasicAnimation(

@@ -1,7 +1,12 @@
 package com.samar.hitmovies.domain.uses_cases.getMovies
 
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.LiveData
 import com.samar.hitmovies.common.Resource
+import com.samar.hitmovies.data.remote.dto.movieResponse.MovieDetailDto
 import com.samar.hitmovies.data.remote.dto.movieResponse.MovieFetchResponse
+import com.samar.hitmovies.data.remote.dto.movieResponse.toMovieDetail
+import com.samar.hitmovies.domain.model.MovieDetail
 import com.samar.hitmovies.domain.repository.MovieRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -97,5 +102,17 @@ class GetMoviesUseCase
             )
         }
 
+    }
+
+    fun getFavouriteMovies(): LiveData<List<MovieDetail>> {
+        return repository.getAllFavourites()
+    }
+
+    suspend fun addToFavourite(movieDetailDto: MovieDetailDto): Long?{
+        return repository.addToFavourite(movieDetailDto.toMovieDetail())
+    }
+
+    suspend fun deleteFromFavourite(movieDetailDto: MovieDetailDto): Int?{
+        return repository.deleteFromFavourite(movieDetailDto.toMovieDetail())
     }
 }

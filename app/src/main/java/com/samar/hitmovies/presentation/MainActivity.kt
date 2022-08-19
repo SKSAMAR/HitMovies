@@ -10,6 +10,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.samar.hitmovies.common.NavigationHomeScreen
 import com.samar.hitmovies.presentation.movies.MoviesScreen
 import com.samar.hitmovies.presentation.movies.MoviesViewModel
 import com.samar.hitmovies.ui.theme.HitMoviesTheme
@@ -28,7 +29,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    MoviesScreen(movieViewModel)
+                    NavigationHomeScreen(moviesViewModel = movieViewModel)
                 }
             }
         }

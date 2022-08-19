@@ -6,15 +6,15 @@ import java.io.Serializable
 
 data class PrimaryImage(
     @SerializedName("caption")
-    val caption: Caption,
+    val caption: Caption?,
     @SerializedName("height")
-    val height: Int,
+    val height: Int?,
     @SerializedName("id")
-    val id: String,
+    val id: String?,
     @SerializedName("__typename")
-    val typename: String,
+    val typename: String?,
     @SerializedName("url")
     val url: String?,
     @SerializedName("width")
-    val width: Int
+    val width: Int?
 ):Serializable

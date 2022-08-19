@@ -6,7 +6,7 @@ import java.io.Serializable
 
 data class Caption(
     @SerializedName("plainText")
-    val plainText: String,
+    val plainText: String?,
     @SerializedName("__typename")
-    val typename: String
+    val typename: String?
 ): Serializable

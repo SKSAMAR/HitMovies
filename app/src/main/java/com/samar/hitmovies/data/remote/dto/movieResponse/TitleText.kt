@@ -8,5 +8,5 @@ data class TitleText(
     @SerializedName("text")
     val text: String,
     @SerializedName("__typename")
-    val typename: String
+    val typename: String?
 ): Serializable

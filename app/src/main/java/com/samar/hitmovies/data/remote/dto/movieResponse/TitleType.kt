@@ -6,13 +6,13 @@ import java.io.Serializable
 
 data class TitleType(
     @SerializedName("id")
-    val id: String,
+    val id: String?,
     @SerializedName("isEpisode")
-    val isEpisode: Boolean,
+    val isEpisode: Boolean?,
     @SerializedName("isSeries")
-    val isSeries: Boolean,
+    val isSeries: Boolean?,
     @SerializedName("text")
     var text: String?,
     @SerializedName("__typename")
-    val typename: String
+    val typename: String?
 ): Serializable

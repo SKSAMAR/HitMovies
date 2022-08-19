@@ -6,11 +6,11 @@ import java.io.Serializable
 
 data class ReleaseDate(
     @SerializedName("day")
-    val day: Int,
+    val day: Int?,
     @SerializedName("month")
-    val month: Int,
+    val month: Int?,
     @SerializedName("__typename")
-    val typename: String,
+    val typename: String?,
     @SerializedName("year")
-    val year: Int
+    val year: Int?
 ): Serializable
