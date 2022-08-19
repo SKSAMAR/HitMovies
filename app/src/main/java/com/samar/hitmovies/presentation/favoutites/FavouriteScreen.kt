@@ -163,5 +163,14 @@ fun MoviesContainer(viewModel: FavouriteViewModel) {
                     .align(Alignment.TopCenter),
             )
         }
+
+        viewModel.animation.value?.let {anim->
+            BasicAnimation(
+                modifier = Modifier
+                    .fillMaxSize(1f)
+                    .align(Alignment.Center),
+                animation = anim
+            )
+        }
     }
 }

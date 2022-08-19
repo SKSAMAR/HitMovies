@@ -2,8 +2,10 @@ package com.samar.hitmovies.presentation.movies
 
 import android.util.Log
 import androidx.compose.foundation.lazy.grid.LazyGridState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
+import com.samar.hitmovies.R
 import com.samar.hitmovies.common.BaseViewModel
 import com.samar.hitmovies.common.Constants.isAccessable
 import com.samar.hitmovies.common.Resource
@@ -13,6 +15,7 @@ import com.samar.hitmovies.domain.model.TypeModel
 import com.samar.hitmovies.domain.uses_cases.getMovies.GetMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -31,7 +34,7 @@ class MoviesViewModel
     private val yearList = ArrayList<Int>()
     private val typeList = ArrayList<TypeModel>()
     private val genreList = ArrayList<String>()
-
+    val animation:MutableState<Int?> = mutableStateOf(null)
     init {
         getMovies()
     }
@@ -205,7 +208,16 @@ class MoviesViewModel
     fun addToFavourite(movieDetailDto: MovieDetailDto){
         viewModelScope.launch(Dispatchers.IO) {
             val result = getMoviesUseCase.addToFavourite(movieDetailDto)
-            Log.d("InsertResultIs", result.toString()?:"Null")
+            likedAnimation()
         }
     }
+
+    private fun likedAnimation(){
+        viewModelScope.launch(Dispatchers.IO){
+            animation.value = R.raw.like
+            delay(4000L)
+            animation.value = null
+        }
+    }
+
 }
