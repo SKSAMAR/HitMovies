@@ -30,34 +30,7 @@ fun NavigationHomeScreen(moviesViewModel: MoviesViewModel){
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = ScreenNav.LIVE.route){
         composable( route = ScreenNav.LIVE.route){
-            val isNetworkAvailable = ConnectionLiveData(LocalContext.current).observeAsState(initial = false)
-            AnimatedVisibility(
-                visible = !isNetworkAvailable.value,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(.05f)
-            ) {
-                Card(
-                    backgroundColor = Color.White,
-                    elevation = 3.dp,
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            text = "No Internet Available",
-                            color = Color.Red,
-                            fontSize = 12.sp
-                        )
-                    }
-                }
-            }
-            if (isNetworkAvailable.value){
-                MoviesScreen(viewModel = moviesViewModel, navController = navController)
-            }
+            MoviesScreen(viewModel = moviesViewModel, navController = navController)
         }
         composable( route = ScreenNav.FAVOURITE.route ){  FavouriteScreen( )    }
     }

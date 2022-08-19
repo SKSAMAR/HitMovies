@@ -1,6 +1,7 @@
 package com.samar.hitmovies.presentation.movies
 
 import android.content.res.Configuration
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,17 +13,21 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ThumbUp
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.flowlayout.FlowRow
 import com.samar.hitmovies.R
 import com.samar.hitmovies.common.BasicAnimation
 import com.samar.hitmovies.presentation.common.OptionTag
 import com.samar.hitmovies.presentation.movies.component.MoviesCardDesign
+import com.samar.hitmovies.util.ConnectionLiveData
 import com.samar.hitmovies.util.CustomSearchViewBasic
 import com.samar.hitmovies.util.ScreenNav
 import me.onebone.toolbar.CollapsingToolbarScaffold
@@ -82,36 +87,63 @@ fun MoviesScreen(viewModel: MoviesViewModel, navController: NavController) {
 
             }
         }) {
-        Column {
 
-            when(configuration.orientation) {
-                Configuration.ORIENTATION_PORTRAIT -> {
-                    Card(
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp),
-                        elevation = 16.dp,
-                        backgroundColor = Color.White,
-                        shape = RoundedCornerShape(10.dp),
-//                        border = BorderStroke(width = 0.9.dp, color = Color.Gray)
-                    ) {
-                        CustomSearchViewBasic(query = viewModel.movieTitle)
-                    }
-                }
-                else->{
-
+        val isNetworkAvailable = ConnectionLiveData(LocalContext.current).observeAsState(initial = false)
+        AnimatedVisibility(
+            visible = !isNetworkAvailable.value,
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(.05f)
+        ) {
+            Card(
+                backgroundColor = Color.White,
+                elevation = 3.dp,
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "No Internet Available",
+                        color = Color.Red,
+                        fontSize = 12.sp
+                    )
                 }
             }
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                DropDownContainer(
-                    viewModel = viewModel,
-                    isGenreExpanded = isGenreExpanded,
-                    isTypeExpanded = isTypeExpanded,
-                    isYearExpanded = isYearExpanded
-                )
-                MoviesContainer(viewModel, configuration)
+        }
+        if (isNetworkAvailable.value){
+            Column {
+                when(configuration.orientation) {
+                    Configuration.ORIENTATION_PORTRAIT -> {
+                        Card(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 5.dp),
+                            elevation = 16.dp,
+                            backgroundColor = Color.White,
+                            shape = RoundedCornerShape(10.dp),
+//                        border = BorderStroke(width = 0.9.dp, color = Color.Gray)
+                        ) {
+                            CustomSearchViewBasic(query = viewModel.movieTitle)
+                        }
+                    }
+                    else->{
+
+                    }
+                }
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    DropDownContainer(
+                        viewModel = viewModel,
+                        isGenreExpanded = isGenreExpanded,
+                        isTypeExpanded = isTypeExpanded,
+                        isYearExpanded = isYearExpanded
+                    )
+                    MoviesContainer(viewModel, configuration)
+                }
             }
         }
     }
