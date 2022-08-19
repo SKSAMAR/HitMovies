@@ -38,9 +38,9 @@ import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
-import coil.compose.AsyncImage
-import coil.compose.SubcomposeAsyncImage
+import coil.compose.*
 import coil.request.ImageRequest
+import coil.size.Size
 import com.samar.hitmovies.R
 import com.samar.hitmovies.common.BasicAnimation
 import com.samar.hitmovies.data.remote.dto.movieResponse.MovieDetailDto
@@ -105,8 +105,9 @@ fun MoviesCardDesign(
                         easing = LinearOutSlowInEasing // Animation Type
                     )
                 ),
-            shape = RoundedCornerShape(5),
-            elevation = 18.dp,
+            elevation = 16.dp,
+            backgroundColor = Color.White,
+            shape = RoundedCornerShape(10.dp),
             border = BorderStroke(width = 0.5.dp, color = Color.Black)
         ) {
             Column(
@@ -117,7 +118,6 @@ fun MoviesCardDesign(
                     modifier = Modifier
                         .fillMaxSize()
                         .weight(1f)
-                        .background(gradientGrayWhite)
                 ) {
 
 
@@ -128,27 +128,23 @@ fun MoviesCardDesign(
                         val noImage =
                             "https://cdn11.bigcommerce.com/s-y76tsfzldy/images/stencil/original/products/7720/20309/360_F_400243185_BOxON3h9avMUX10RsDkt3pJ8iQx72kS3__32888.1644948713.jpg"
 
-                        AsyncImage(
-                            model = ImageRequest.Builder(LocalContext.current)
-                                .data(movie.primaryImage?.url ?: noImage)
-                                .crossfade(true)
-                                .build(),
-                            placeholder = painterResource(R.drawable.clapperboard),
+
+                        SubcomposeAsyncImage(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .weight(1f),
+                            model = movie.primaryImage?.url ?: noImage,
+                            loading = {
+                                BasicAnimation(
+                                    modifier = Modifier
+                                        .fillMaxSize(.3f)
+                                        .align(Alignment.Center),
+                                    animation = R.raw.loading
+                                )
+                            },
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
-                            modifier = Modifier.clip(RectangleShape)
-                                .fillMaxWidth()
-                                .weight(1f)
                         )
-
-//                        AsyncImage(
-//                            modifier = Modifier
-//                                .fillMaxWidth()
-//                                .weight(1f),
-//                            model = movie.primaryImage?.url ?: noImage,
-//                            contentDescription = null,
-//                            contentScale = ContentScale.Crop,
-//                        )
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()

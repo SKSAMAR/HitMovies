@@ -242,6 +242,19 @@ fun MoviesContainer(viewModel: MoviesViewModel, configuration: Configuration) {
                             MoviesCardDesign(movie = it, action = { viewModel.addToFavourite(it) })
                         }
                     }
+                    /**
+                    LazyVerticalGrid(
+                    columns = GridCells.Fixed(gridCount),
+                    state = gridState
+                    ) {
+                    items(movieList.size - 1) {
+                    if(movieList[it].titleText.text.contains(viewModel.movieTitle.value, true)){
+                    MoviesCardDesign(movie = movieList[it], action = { viewModel.deleteFromFavourite(movieList[it]) }, isDislike = true)
+                    }
+                    }
+                    }
+                    **/
+
                     if (columnState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == columnState.layoutInfo.totalItemsCount - 1) {
                         viewModel.getNext()
                     }
