@@ -257,8 +257,8 @@ fun MoviesContainer(viewModel: MoviesViewModel, configuration: Configuration) {
                         state = gridState,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        items(movieList.size - 1) {
-                            MoviesCardDesign(movie = movieList[it], action = { viewModel.addToFavourite(movieList[it]) })
+                        items(movieList) {movie->
+                            MoviesCardDesign(movie = movie, action = { viewModel.addToFavourite(movie) })
                         }
                     }
                     if (gridState.layoutInfo.visibleItemsInfo.lastOrNull()?.index == gridState.layoutInfo.totalItemsCount - 1) {
