@@ -74,6 +74,10 @@ class MoviesViewModel
         }.launchIn(viewModelScope)
     }
 
+    fun noNetworkError(message: String){
+        _state.value = ScreenState(error = message)
+    }
+
     fun getNext(){
         Log.d("CallingNext", "CallingNext")
         next?.let {
