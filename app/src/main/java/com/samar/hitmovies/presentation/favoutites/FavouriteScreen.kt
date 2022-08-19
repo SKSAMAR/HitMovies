@@ -3,10 +3,7 @@ package com.samar.hitmovies.presentation.favoutites
 import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
@@ -38,25 +35,9 @@ fun FavouriteScreen(viewModel: FavouriteViewModel = hiltViewModel()) {
         state = toolbarState,
         scrollStrategy = ScrollStrategy.EnterAlways,
         toolbar = {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 18.dp, end = 18.dp, top = 9.dp, bottom = 4.dp)
-            ) {
 
-                when(configuration.orientation) {
-                    Configuration.ORIENTATION_PORTRAIT -> {
-
-                    }
-                    else->{
-
-                    }
-                }
-
-            }
         }) {
         Column {
-
             when(configuration.orientation) {
                 Configuration.ORIENTATION_PORTRAIT -> {
                     Card(
@@ -134,9 +115,9 @@ fun MoviesContainer(viewModel: FavouriteViewModel) {
                         state = gridState,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        items(movieList.size - 1) {
-                            if(movieList[it].titleText.text.contains(viewModel.movieTitle.value, true)){
-                                MoviesCardDesign(movie = movieList[it], action = { viewModel.deleteFromFavourite(movieList[it]) }, isDislike = true)
+                        items(movieList) {movie->
+                            if(movie.titleText.text.contains(viewModel.movieTitle.value, true)){
+                                MoviesCardDesign(movie = movie, action = { viewModel.deleteFromFavourite(movie) }, isDislike = true)
                             }
                         }
                     }
@@ -147,9 +128,9 @@ fun MoviesContainer(viewModel: FavouriteViewModel) {
                         columns = GridCells.Fixed(gridCount),
                         state = gridState
                     ) {
-                        items(movieList.size - 1) {
-                            if(movieList[it].titleText.text.contains(viewModel.movieTitle.value, true)){
-                                MoviesCardDesign(movie = movieList[it], action = { viewModel.deleteFromFavourite(movieList[it]) }, isDislike = true)
+                        items(movieList) {movie->
+                            if(movie.titleText.text.contains(viewModel.movieTitle.value, true)){
+                                MoviesCardDesign(movie = movie, action = { viewModel.deleteFromFavourite(movie) }, isDislike = true)
                             }
                         }
                     }
