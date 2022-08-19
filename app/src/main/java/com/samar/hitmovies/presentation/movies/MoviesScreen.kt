@@ -11,7 +11,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ThumbUp
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
@@ -58,8 +58,8 @@ fun MoviesScreen(viewModel: MoviesViewModel, navController: NavController) {
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(top = 2.dp),
-                            mainAxisSpacing = 10.dp,
-                            crossAxisSpacing = 10.dp,
+                            mainAxisSpacing = 5.dp,
+                            crossAxisSpacing = 5.dp,
                         ) {
                             OptionTag(hint = "Year", tag = viewModel.year) { isYearExpanded.value = true }
                             OptionTag(hint = "Genre", tag = viewModel.genre) {
@@ -73,7 +73,7 @@ fun MoviesScreen(viewModel: MoviesViewModel, navController: NavController) {
                                 }
                             ) {
                                 Icon(
-                                    imageVector = Icons.Default.ThumbUp,
+                                    imageVector = Icons.Filled.Checklist,
                                     contentDescription = "",
                                     tint = MaterialTheme.colors.primary
                                 )

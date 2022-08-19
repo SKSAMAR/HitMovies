@@ -121,4 +121,8 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:2.4.3"
 
+    //More Icons
+    implementation "androidx.compose.material:material-icons-extended:$compose_version"
+
+
 }
